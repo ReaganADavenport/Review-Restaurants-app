@@ -1,10 +1,8 @@
 const express = require('express'),
-  bcrypt = require('bcryptjs'),
   router = express.Router();
   
 
-const User = require('../models/user'),
-  UsersControllers = require('../controllers/users')
+const  UsersController = require('../controllers/users');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -20,50 +18,15 @@ router.get('/', function(req, res, next) {
 });
 
 
-router.get('/signup', UsersControllers.signup_get);
+router.get('/signup', UsersController.signup_get);
 
-router.post('/signup',(req, res)=>{
-  console.log(req.body);
-  
-  const { first_name, last_name, email, password} = req.body;
-  const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(password, salt);
+router.post('/signup', UsersController.signup_post);
 
-  const userInstance = new User(null, first_name, last_name, email, hash);
-  userInstance.save().then(response=> {
-    console.log("response is ", response);
-    res.sendStatus(200);
-  });
-
-});
-
-router.get('/logout', (req,res) =>{
-  req.session.destroy();
-  res.redirect('/');
-})
+router.get('/logout', UsersController.logout_get);
 
 
-router.get('/login', UsersControllers.login_get);
+router.get('/login', UsersController.login_get);
 
-router.post('/login',(req, res)=>{
-  const {email, password} = req.body;
-
-  const userInstance = new User(null, null, null, email, password);
-
-  userInstance.login().then(response =>{
-    req.session.is_logged_in = response.isValid;
-    console.log("login response is:", response);
-    if(!!response.isValid){
-      req.session.first_name = response.first_name;
-      req.session.last_name = response.last_name;
-      req.session.user_id = response.user_id;
-      res.redirect('/');
-    } else{
-      res.sendStatus(401);
-    }
-  });
-})
-
-
+router.post('/login', UsersController.login_post);
 
 module.exports = router;
