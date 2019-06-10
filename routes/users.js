@@ -43,17 +43,7 @@ router.get('/logout', (req,res) =>{
 })
 
 
-router.get('/login', (req,res) =>{
-  res.render('template', {
-    locals: {
-      title: 'Login Page',
-      is_logged_in: req.session.is_logged_in
-    },
-    partials:{
-      partial:'partial-login-form'
-    }
-  })
-});
+router.get('/login', UsersControllers.login_get);
 
 router.post('/login',(req, res)=>{
   const {email, password} = req.body;
