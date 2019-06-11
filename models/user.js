@@ -32,7 +32,18 @@ class User{
                 select id, first_name, last_name, password
                     from users
                 where email = $1`,[this.email]);
-                return userData;
+            return userData;
+        } catch(err){
+            return err.message;
+        }
+    }
+
+    static async getAllUsers(){
+        try{
+            const response = await db.any(`
+                select * from users
+                `);
+            return response;
         } catch(err){
             return err.message;
         }

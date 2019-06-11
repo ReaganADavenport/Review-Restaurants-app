@@ -24,8 +24,8 @@ class Restaurant{
         try{
             const query = `select * from restaurant where id=$1`;
             const response = await db.one(query, [restaurant_id]);
-            console.log(response);
-            return response;
+            restaurantInstance = new Restaurant(restaurant_id, null, null,null,null,null,null);
+            return restaurantInstance;
         } catch(err){
             return err.message;
         }
